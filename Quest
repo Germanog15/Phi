@@ -1,0 +1,12 @@
+SELECT
+  COUNT(hash) AS ethereum_citizen_total_transactions,
+  SUM(gas_price * 1e-18 * gas_used)AS gas_guzzler_eth,
+  MIN(gas_price) * 1e-9 AS gas_saver_gwei,
+  MAX(gas_price) * 1e-9 AS gas_spender_gwei,
+  COUNT(CASE WHEN success = FALSE THEN 1 END) AS total_transactions_failed,
+  COUNT(CASE WHEN "to" IS NULL AND success = TRUE THEN 1 END) as total_contracts_created,
+  MIN(block_time) AS first_transaction_date
+FROM
+  ethereum.transactions
+WHERE
+  "from" = {{wallet}}
